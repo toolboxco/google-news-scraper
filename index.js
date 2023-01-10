@@ -7,7 +7,7 @@ const buildQueryString = require('./buildQueryString')
 
 module.exports = async config => {
     const queryString = config.queryVars ? buildQueryString(config.queryVars) : ''
-    const url = `https://news.google.com/search?${queryString}&q=${config.searchTerm} when:${config.timeframe || '7d'}`
+    const url = `https://news.google.com/search?${queryString}&q=${config.searchTerm}`
         //console.log(`SCRAPING NEWS FROM: ${url}`)
     const puppeteerConfig = {
         headless: true,
@@ -16,7 +16,7 @@ module.exports = async config => {
     const browser = await puppeteer.launch(puppeteerConfig)
     const page = await browser.newPage()
     page.setViewport({ width: 1366, height: 768 })
-    page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36')
+    page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36')
     page.setRequestInterception(true)
     page.on('request', request => {
         if (!request.isNavigationRequest()) {
@@ -25,8 +25,8 @@ module.exports = async config => {
         }
         const headers = request.headers()
         headers['Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3'
-        headers['Accept-Encoding'] = 'gzip'
-        headers['Accept-Language'] = 'en-US,en;q=0.9,es;q=0.8'
+        headers['Accept-Encoding'] = 'gzip, deflate, br'
+        headers['Accept-Language'] = 'en-GB,en-US;q=0.9,en;q=0.8'
         headers['Upgrade-Insecure-Requests'] = 1
         headers['Referer'] = 'https://www.google.com/'
         request.continue({ headers })
